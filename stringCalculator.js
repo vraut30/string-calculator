@@ -1,23 +1,7 @@
-function splitNumbers(numbers, delimiterPattern) {
-  return numbers
-    .split(delimiterPattern)
-    .map(s => s.trim())
-    .filter(s => s.length > 0);
-}
-
-function sumNumbers(numberStrings) {
-  return numberStrings
-    .map(Number)
-    .reduce((sum, n) => sum + n, 0);
-}
-
-function add(numbers) {
-  if (numbers === '') return 0;
-
+function parseDelimiter(numbers) {
   let delimiterPattern = /,|\n/;
   let numbersPart = numbers;
 
-  // Check for custom delimiter
   if (numbers.startsWith('//')) {
     const delimiterMatch = numbers.match(/^\/\/(.)\n/);
     if (delimiterMatch) {
@@ -26,13 +10,28 @@ function add(numbers) {
       numbersPart = numbers.slice(4); // Skip //x\n
     }
   }
+  return { delimiterPattern, numbersPart };
+}
 
+function splitNumbers(numbers, delimiterPattern) {
+  return numbers
+    .split(delimiterPattern)
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
+}
+
+function add(numbers) {
+  if (numbers === '') return 0;
+
+  const { delimiterPattern, numbersPart } = parseDelimiter(numbers);
   const numberStrings = splitNumbers(numbersPart, delimiterPattern);
   const numberValues = numberStrings.map(Number);
+
   const negatives = numberValues.filter(n => n < 0);
   if (negatives.length > 0) {
     throw new Error(`negatives not allowed: ${negatives.join(',')}`);
   }
+
   return numberValues.reduce((sum, n) => sum + n, 0);
 }
 
