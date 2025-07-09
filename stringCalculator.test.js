@@ -19,4 +19,7 @@ describe('add', () => {
   test('throws on negative numbers with message including the negatives', () => {
     expect(() => add('1,-2,3')).toThrow('negatives not allowed: -2');
   });
+  test('ignores numbers greater than 1000', () => {
+    expect(add('2,1001')).toBe(2);
+  });
 }); 
