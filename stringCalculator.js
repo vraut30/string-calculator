@@ -1,6 +1,6 @@
-function splitNumbers(numbers, delimiter = ',') {
+function splitNumbers(numbers) {
   return numbers
-    .split(delimiter)
+    .split(/,|\n/)
     .map(s => s.trim())
     .filter(s => s.length > 0);
 }
