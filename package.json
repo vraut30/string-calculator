@@ -1,0 +1,23 @@
+{
+  "name": "string-calculator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "stringCalculator.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vraut30/string-calculator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vraut30/string-calculator/issues"
+  },
+  "homepage": "https://github.com/vraut30/string-calculator#readme",
+  "devDependencies": {
+    "jest": "^30.0.4"
+  }
+}
