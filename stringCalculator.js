@@ -28,7 +28,12 @@ function add(numbers) {
   }
 
   const numberStrings = splitNumbers(numbersPart, delimiterPattern);
-  return sumNumbers(numberStrings);
+  const numberValues = numberStrings.map(Number);
+  const negatives = numberValues.filter(n => n < 0);
+  if (negatives.length > 0) {
+    throw new Error(`negatives not allowed: ${negatives.join(',')}`);
+  }
+  return numberValues.reduce((sum, n) => sum + n, 0);
 }
 
 module.exports = add; 

@@ -16,4 +16,7 @@ describe('add', () => {
   test('returns 3 for "//;\n1;2"', () => {
     expect(add('//;\n1;2')).toBe(3);
   });
+  test('throws on negative numbers with message including the negatives', () => {
+    expect(() => add('1,-2,3')).toThrow('negatives not allowed: -2');
+  });
 }); 
