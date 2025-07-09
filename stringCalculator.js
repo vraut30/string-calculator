@@ -3,11 +3,32 @@ function parseDelimiter(numbers) {
   let numbersPart = numbers;
 
   if (numbers.startsWith('//')) {
-    const delimiterMatch = numbers.match(/^\/\/(.)\n/);
-    if (delimiterMatch) {
-      const customDelimiter = delimiterMatch[1];
-      delimiterPattern = new RegExp(`[${customDelimiter}\n,]`);
-      numbersPart = numbers.slice(4); // Skip //x\n
+    // Support multiple delimiters of any length: //[delim1][delim2]\n
+    const multiDelimMatch = numbers.match(/^\/\/(\[.+?\])+\n/);
+    if (multiDelimMatch) {
+      // Extract all delimiters inside []
+      const delimiterMatches = [...numbers.matchAll(/\[(.+?)\]/g)];
+      const delimiters = delimiterMatches.map(m => m[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+      delimiterPattern = new RegExp(`(?:${delimiters.join('|')})|,|\n`);
+      // Find where the delimiter declaration ends
+      const delimiterDeclarationLength = numbers.indexOf('\n') + 1;
+      numbersPart = numbers.slice(delimiterDeclarationLength);
+    } else {
+      // Single character or single multi-character delimiter
+      const multiCharMatch = numbers.match(/^\/\/\[(.+?)\]\n/);
+      if (multiCharMatch) {
+        const customDelimiter = multiCharMatch[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        delimiterPattern = new RegExp(`(?:${customDelimiter})|,|\n`);
+        numbersPart = numbers.slice(multiCharMatch[0].length);
+      } else {
+        // Single character delimiter: //;
+        const delimiterMatch = numbers.match(/^\/\/(.)\n/);
+        if (delimiterMatch) {
+          const customDelimiter = delimiterMatch[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          delimiterPattern = new RegExp(`[${customDelimiter},\n]`);
+          numbersPart = numbers.slice(delimiterMatch[0].length);
+        }
+      }
     }
   }
   return { delimiterPattern, numbersPart };
